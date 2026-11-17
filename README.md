@@ -1,6 +1,6 @@
 # Web personal de Benjamin
 
-**Web en vivo:** https://benjamarquezvargas09-art.github.io/
+**Web en vivo:** https://benjamin-marquez.vercel.app/ (copia en https://benjamarquezvargas09-art.github.io/)
 
 Web personal de Jesús Benjamin Márquez Vargas. React + TypeScript + Vite, con un fondo 3D (Three.js) que se carga después del contenido, 7 idiomas y una página prerenderizada por idioma para SEO.
 
@@ -57,6 +57,11 @@ Aparecen solo con `npm run dev`. Se completan en los archivos de `src/content/`:
 - `projects.ts`: año, tecnologías, GitHub, y nombre, año y resultado de la competencia de SalesCost.
 - `experiences.ts`: tu rol en SPATIUM IV y Acindar, capturas de SPATIUM IV, y el proyecto, desafío, resultado y año de Acindar.
 - `achievements.ts`: años del Sumo Robótico y del torneo en la Técnica «Albert Einstein».
+
+## Publicar cambios
+
+- **Vercel (link principal):** `npx vercel deploy --prod` desde esta carpeta. Para que se publique solo con cada push, conectá GitHub en Vercel → Settings → Login Connections y después ejecutá `npx vercel git connect`.
+- **GitHub Pages (copia):** se publica sola con cada push a `main`.
 
 ## Publicar (y que aparezca el candado de "seguro")
 

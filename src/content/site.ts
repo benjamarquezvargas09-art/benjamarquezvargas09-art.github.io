@@ -5,9 +5,10 @@
  *     Se usa para la URL canónica, el sitemap, Open Graph y JSON-LD.
  */
 export const site = {
-  // ✏️  Dirección pública de la web (sin barra final). Hoy: GitHub Pages.
-  //     Si comprás un dominio propio, cambialo acá y en GitHub → Settings → Pages.
-  url: "https://benjamarquezvargas09-art.github.io",
+  // ✏️  Dirección principal de la web (sin barra final): Vercel.
+  //     La copia de GitHub Pages apunta acá como canónica para que Google no la duplique.
+  //     Si comprás un dominio propio, conectalo en Vercel y cambialo acá.
+  url: "https://benjamin-marquez.vercel.app",
 
   // Imagen para compartir en redes (1200×630). Se genera con `npm run images`.
   ogImage: "/og.jpg",
