@@ -1,0 +1,62 @@
+/* ─────────────────────────────────────────────────────────────
+   TOKENS — colores, tipografías, curvas y medidas.
+   ✏️  Si querés cambiar el color de la línea, es --line.
+   ───────────────────────────────────────────────────────────── */
+:root {
+  /* Color */
+  --ink: #0b0b0c;
+  --ink-2: #131314;
+  --ink-3: #1b1b1d;
+  --paper: #e9ece0;
+  --muted: #9a9d93; /* 7.3:1 sobre --ink */
+  --dim: #74776f; /* solo texto grande o decorativo */
+  --line: #ff5a1f; /* la línea: único color de la web */
+  --line-hover: #ff7a47;
+  --line-soft: rgb(255 90 31 / 0.14);
+  --rule: rgb(233 236 224 / 0.14);
+  --rule-strong: rgb(233 236 224 / 0.32);
+
+  /* Tipografía */
+  --f-display: "Gloock", "Iowan Old Style", Georgia, serif;
+  --f-serif: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --f-sans: "Archivo Variable", "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --t-hero: clamp(4.4rem, 19.5vw, 19rem);
+  --t-display: clamp(2.8rem, 7.4vw, 6.6rem);
+  --t-chapter: clamp(4rem, 14vw, 13rem);
+  --t-xl: clamp(1.7rem, 3vw, 2.6rem);
+  --t-lg: clamp(1.2rem, 1.6vw, 1.45rem);
+  --t-body: 1.0625rem;
+  --t-sm: 0.875rem;
+  --t-label: 0.74rem;
+
+  /* Curvas (de las skills de Emil Kowalski) */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1); /* easeOutBack, para el regreso de los imanes */
+
+  /* Medidas */
+  --gutter: clamp(16px, 4.2vw, 64px);
+  --wrap: 1480px;
+  --section: clamp(6rem, 14vw, 13rem);
+  --radius: 10px;
+
+  /* Intro: cuánto espera el hero antes de entrar */
+  --intro: 1.3s;
+}
+
+html.intro-seen {
+  --intro: 0.15s;
+}
+
+/* Japonés y chino: serif del sistema para los títulos (Gloock no tiene esos glifos). */
+:lang(ja) {
+  --f-display: "Gloock", "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
+  --f-serif: "Instrument Serif", "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
+  --f-sans: "Archivo Variable", "Hiragino Sans", "Yu Gothic", "Noto Sans JP", sans-serif;
+}
+:lang(zh) {
+  --f-display: "Gloock", "Songti SC", "SimSun", "Noto Serif SC", serif;
+  --f-serif: "Instrument Serif", "Songti SC", "SimSun", "Noto Serif SC", serif;
+  --f-sans: "Archivo Variable", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+}

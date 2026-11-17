@@ -1,0 +1,10 @@
+node_modules
+dist
+dist-ssr
+.DS_Store
+*.local
+.taste-skill
+# Herramientas locales del editor/IA (no forman parte de la web)
+.claude/
+.impeccable/
+skills-lock.json

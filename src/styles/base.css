@@ -1,0 +1,293 @@
+/* ─── Reset y superficies del navegador ─────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  background: var(--ink);
+  color-scheme: dark;
+  scrollbar-color: var(--rule-strong) var(--ink);
+  scrollbar-width: thin;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+body {
+  margin: 0;
+  min-height: 100svh;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--f-sans);
+  font-size: var(--t-body);
+  line-height: 1.6;
+  font-variation-settings: "wdth" 100;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  caret-color: var(--line);
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--line);
+  color: var(--ink);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--ink);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--rule-strong);
+  border-radius: 8px;
+}
+
+img,
+svg,
+picture {
+  display: block;
+  max-width: 100%;
+}
+img {
+  height: auto;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+ul,
+ol,
+dl,
+dd,
+blockquote,
+figure {
+  margin: 0;
+}
+ul,
+ol {
+  padding: 0;
+  list-style: none;
+}
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+p a,
+.text-link {
+  text-decoration: underline;
+  text-decoration-color: var(--line);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+}
+
+:focus-visible {
+  outline: 2px solid var(--line);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+main:focus {
+  outline: none;
+}
+
+.sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 300;
+  padding: 10px 16px;
+  background: var(--line);
+  color: var(--ink);
+  border-radius: 999px;
+  font-weight: 600;
+  transform: translateY(-160%);
+  transition: transform 200ms var(--ease-out);
+}
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+/* ─── Estructura ────────────────────────────────────────────── */
+#root {
+  position: relative;
+  isolation: isolate;
+}
+
+.wrap {
+  width: 100%;
+  max-width: var(--wrap);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  position: relative;
+  padding-block: var(--section);
+}
+
+.display {
+  font-family: var(--f-display);
+  font-weight: 400;
+  font-size: var(--t-display);
+  line-height: 0.95;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.label {
+  display: block;
+  font-family: var(--f-sans);
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.9rem;
+}
+:lang(ja) .label,
+:lang(zh) .label {
+  letter-spacing: 0.06em;
+}
+
+.lead {
+  font-size: var(--t-lg);
+  line-height: 1.5;
+  color: var(--paper);
+  text-wrap: pretty;
+}
+
+p {
+  max-width: 68ch;
+  text-wrap: pretty;
+}
+p + p {
+  margin-top: 1.1em;
+}
+
+/* ─── Apariciones al hacer scroll ───────────────────────────────
+   Solo se ocultan si hay JavaScript (clase .js) — sin JS todo se ve. */
+.split {
+  display: inline;
+}
+.split__mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+.split__item {
+  display: inline-block;
+  will-change: transform;
+}
+
+.js .split[data-reveal] .split__item {
+  transform: translate3d(0, 108%, 0) rotate(5deg);
+  transform-origin: 0 100%;
+  transition: transform 1000ms var(--ease-out);
+}
+.js .split[data-reveal][data-visible] .split__item {
+  transform: none;
+}
+
+.js [data-reveal="fade"] {
+  opacity: 0;
+  transform: translate3d(0, 32px, 0);
+  filter: blur(6px);
+  transition:
+    opacity 900ms var(--ease-out),
+    transform 1100ms var(--ease-out),
+    filter 900ms var(--ease-out);
+}
+.js [data-reveal="fade"][data-visible] {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+.js [data-reveal="media"] {
+  overflow: clip;
+  clip-path: inset(22% 8% 22% 8% round 18px);
+  transition: clip-path 1400ms var(--ease-in-out);
+}
+.js [data-reveal="media"] img,
+.js [data-reveal="media"] svg {
+  transform: scale(1.16);
+  transition: transform 1800ms var(--ease-out);
+}
+.js [data-reveal="media"][data-visible] {
+  clip-path: inset(0 0 0 0 round 0px);
+}
+.js [data-reveal="media"][data-visible] img,
+.js [data-reveal="media"][data-visible] svg {
+  transform: none;
+}
+
+.js [data-reveal="stagger"] li {
+  opacity: 0;
+  transform: translate3d(0, 24px, 0);
+  transition:
+    opacity 700ms var(--ease-out),
+    transform 900ms var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 60ms);
+}
+.js [data-reveal="stagger"][data-visible] li {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .split[data-reveal] .split__item,
+  .js [data-reveal="fade"],
+  .js [data-reveal="stagger"] li {
+    transform: none !important;
+    filter: none !important;
+    transition: opacity 400ms ease !important;
+  }
+  .js .split[data-reveal] .split__item {
+    opacity: 0;
+  }
+  .js .split[data-reveal][data-visible] .split__item {
+    opacity: 1;
+  }
+  .js [data-reveal="media"],
+  .js [data-reveal="media"] img,
+  .js [data-reveal="media"] svg {
+    clip-path: none !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
