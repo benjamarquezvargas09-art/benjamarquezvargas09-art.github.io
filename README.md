@@ -1,5 +1,7 @@
 # Web personal de Benjamin
 
+**Web en vivo:** https://benjamarquezvargas09-art.github.io/
+
 Web personal de Jesús Benjamin Márquez Vargas. React + TypeScript + Vite, con un fondo 3D (Three.js) que se carga después del contenido, 7 idiomas y una página prerenderizada por idioma para SEO.
 
 ## Comandos
@@ -75,6 +77,8 @@ Aparecen solo con `npm run dev`. Se completan en los archivos de `src/content/`:
 ## Créditos
 
 - Textura de la Luna: NASA's Scientific Visualization Studio, *CGI Moon Kit* (LRO/LROC y LOLA), dominio público. Archivos originales en `assets-src/moon/`.
+- Satélite: modelo 3D oficial del *Lunar Reconnaissance Orbiter* de [NASA 3D Resources](https://github.com/nasa/NASA-3D-Resources), comprimido con meshopt (`public/models/lro.glb`; original en `assets-src/satellite/`).
+- Música: no usa ninguna canción. Se genera en el navegador (`src/lib/ambient.ts`) con Web Audio y sonido 3D (HRTF). Arranca muy bajito con el primer clic o tecla, y el botón de barritas de arriba la prende y la apaga. El volumen se cambia con `MASTER_VOLUME`.
 
 ## Rendimiento y accesibilidad
 

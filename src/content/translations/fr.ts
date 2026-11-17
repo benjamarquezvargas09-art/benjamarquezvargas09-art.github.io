@@ -18,6 +18,8 @@ const fr: Dict = {
     language: "Langue",
     home: "Accueil",
     sections: "Sections",
+    soundOn: "Activer la musique",
+    soundOff: "Couper la musique",
   },
   intro: { loading: "Chargement" },
   hero: {

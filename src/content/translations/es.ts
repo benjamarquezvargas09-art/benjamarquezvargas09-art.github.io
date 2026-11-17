@@ -25,6 +25,8 @@ const es = {
     language: "Idioma",
     home: "Inicio",
     sections: "Secciones",
+    soundOn: "Activar música",
+    soundOff: "Silenciar música",
   },
   intro: {
     loading: "Cargando",

@@ -18,6 +18,8 @@ const en: Dict = {
     language: "Language",
     home: "Home",
     sections: "Sections",
+    soundOn: "Turn music on",
+    soundOff: "Mute music",
   },
   intro: { loading: "Loading" },
   hero: {

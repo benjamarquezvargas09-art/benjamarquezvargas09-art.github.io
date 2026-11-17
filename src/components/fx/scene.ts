@@ -111,7 +111,7 @@ export function createScene(canvas: HTMLCanvasElement, tier: Exclude<Tier, "stat
   const perSegment = RADIAL * 6;
 
   /* ── Galaxias ─────────────────────────────────────────── */
-  const galaxyA = createGalaxy({ count: full ? 70000 : 16000, radius: 11.5, branches: 4, spin: 1.05, pixelRatio });
+  const galaxyA = createGalaxy({ count: full ? 56000 : 14000, radius: 11.5, branches: 4, spin: 1.05, pixelRatio });
   // Galaxia del hero: cerca de la cámara e inclinada (se ve como una elipse ancha), arriba del nombre.
   const galaxyBaseY = pts[1].y + 2;
   galaxyA.points.position.set(pts[1].x + 1.2, galaxyBaseY, -6);
@@ -188,6 +188,7 @@ export function createScene(canvas: HTMLCanvasElement, tier: Exclude<Tier, "stat
     galaxyA.points.position.y = galaxyBaseY + (w < 700 ? 3.2 : 0);
     camera.updateProjectionMatrix();
     pointsUniforms.uAspect.value = w / h;
+    pointsUniforms.uPixel.value = renderer.getPixelRatio();
   };
   resize();
   window.addEventListener("resize", resize);
@@ -210,8 +211,39 @@ export function createScene(canvas: HTMLCanvasElement, tier: Exclude<Tier, "stat
   const target = new THREE.Vector3();
   const look = new THREE.Vector3();
 
+  /* Calidad adaptativa: si la compu no llega a ~45 fps, baja resolución y efectos. */
+  let quality = 0;
+  let frames = 0;
+  let slowFrames = 0;
+  let last = performance.now();
+  const degrade = () => {
+    quality += 1;
+    slowFrames = 0;
+    frames = 0;
+    if (quality === 1) {
+      renderer.setPixelRatio(pixelRatio * 0.75);
+      galaxyB.points.visible = false;
+      glow.visible = false;
+    } else if (quality === 2) {
+      renderer.setPixelRatio(pixelRatio * 0.6);
+      props.group.visible = false;
+    }
+    resize();
+  };
+
   const tick = () => {
     const now = performance.now();
+    const dt = now - last;
+    last = now;
+    if (now - start > 3500 && quality < 2 && !document.hidden) {
+      frames += 1;
+      if (dt > 22) slowFrames += 1;
+      if (frames >= 120) {
+        if (slowFrames > 60) degrade();
+        frames = 0;
+        slowFrames = 0;
+      }
+    }
     const time = (now - start) / 1000;
     const intro = ease.out(clamp((now - start) / INTRO_MS));
 

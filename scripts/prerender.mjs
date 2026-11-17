@@ -6,7 +6,7 @@
  * hreflang, sitemap.xml y robots.txt.
  * La fecha de nacimiento NO se incluye en ningún metadato.
  */
-import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { pathToFileURL } from "node:url";
 
@@ -14,7 +14,14 @@ const DIST = "dist";
 const ssr = await import(pathToFileURL(join(process.cwd(), "dist-ssr", "entry-server.js")).href);
 const { render, dicts, languages, langPath, defaultLang, profile, site, socials, projects, experiences } = ssr;
 
-const template = await readFile(join(DIST, "index.html"), "utf8");
+// Precarga de las fuentes del hero (el nombre gigante y los textos): aparecen antes y sin saltos.
+const assetFiles = await readdir(join(DIST, "assets"));
+const preloadFonts = [/^gloock-latin-400-normal-.*\.woff2$/, /^archivo-latin-wdth-normal-.*\.woff2$/, /^instrument-serif-latin-400-italic-.*\.woff2$/]
+  .map((re) => assetFiles.find((f) => re.test(f)))
+  .filter(Boolean)
+  .map((f) => `<link rel="preload" href="/assets/${f}" as="font" type="font/woff2" crossorigin />`)
+  .join("\n    ");
+const template = (await readFile(join(DIST, "index.html"), "utf8")).replace("</head>", `    ${preloadFonts}\n  </head>`);
 const base = site.url.replace(/\/$/, "");
 const abs = (path) => base + path;
 const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
@@ -131,7 +138,7 @@ function head(lang) {
     .map((l) => `<meta property="og:locale:alternate" content="${l.ogLocale}" />`)
     .join("\n    ");
 
-  return `<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; media-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+  return `<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' blob:; media-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'" />
     <title>${esc(t.meta.title)}</title>
     <meta name="description" content="${esc(t.meta.description)}" />
     <meta name="author" content="${esc(profile.fullName)}" />

@@ -19,6 +19,8 @@ const zh: Dict = {
     language: "语言",
     home: "首页",
     sections: "章节",
+    soundOn: "开启音乐",
+    soundOff: "关闭音乐",
   },
   intro: { loading: "加载中" },
   hero: {

@@ -3,9 +3,13 @@
  *  · Color: Lunar Reconnaissance Orbiter Camera (LROC).
  *  · Relieve: altimetría del Lunar Orbiter Laser Altimeter (LOLA).
  * Fuente: NASA's Scientific Visualization Studio, "CGI Moon Kit" (dominio público).
+ * El satélite que la orbita es el modelo 3D oficial del Lunar Reconnaissance
+ * Orbiter (NASA 3D Resources): la misma nave que tomó las fotos de la textura.
  * Se arrastra con el mouse o el dedo para girarla (con inercia) y gira sola despacio.
  */
 import * as THREE from "three";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
 
 export function createMoon(
   canvas: HTMLCanvasElement,
@@ -14,8 +18,12 @@ export function createMoon(
   let pending = 2;
   const onLoaded = () => {
     pending -= 1;
-    if (pending === 0) onReady();
+    if (pending === 0) {
+      onReady();
+      loadSatellite();
+    }
   };
+  let disposed = false;
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, small ? 1.5 : 2));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -47,12 +55,43 @@ export function createMoon(
   tilt.rotation.z = 0.12;
   tilt.add(moon);
 
-  // Órbita naranja y un satélite (la colonia de SPATIUM IV, digamos).
+  // Órbita: un anillo gris celeste, fino y translúcido.
   const orbit = new THREE.Group();
   orbit.rotation.set(1.22, 0, -0.32);
-  const ring = new THREE.Mesh(new THREE.TorusGeometry(2.15, 0.009, 8, 220), new THREE.MeshBasicMaterial({ color: "#ff5a1f" }));
-  const sat = new THREE.Mesh(new THREE.SphereGeometry(0.055, 16, 12), new THREE.MeshBasicMaterial({ color: "#e9ece0" }));
+  const ringMat = new THREE.MeshBasicMaterial({ color: "#b4cde0", transparent: true, opacity: 0.32, depthWrite: false });
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(2.15, 0.006, 8, 240), ringMat);
+  // El satélite: primero un punto de luz; cuando carga, el modelo real del LRO.
+  const sat = new THREE.Group();
+  const placeholder = new THREE.Mesh(new THREE.SphereGeometry(0.04, 12, 8), new THREE.MeshBasicMaterial({ color: "#dfe9f2" }));
+  sat.add(placeholder);
   orbit.add(ring, sat);
+  let model: THREE.Object3D | null = null;
+
+  function loadSatellite() {
+    const gltf = new GLTFLoader();
+    gltf.setMeshoptDecoder(MeshoptDecoder);
+    gltf.load(
+      "/models/lro.glb",
+      (result) => {
+        if (disposed) return;
+        model = result.scene;
+        // Escala: el modelo mide ~40 unidades; en la escena, ~0,62.
+        const box = new THREE.Box3().setFromObject(model);
+        const size = box.getSize(new THREE.Vector3()).length();
+        const center = box.getCenter(new THREE.Vector3());
+        model.position.sub(center);
+        const holder = new THREE.Group();
+        holder.add(model);
+        holder.scale.setScalar(0.62 / size);
+        sat.remove(placeholder);
+        sat.add(holder);
+      },
+      undefined,
+      () => {
+        /* si falla, queda el punto de luz */
+      },
+    );
+  }
 
   scene.add(tilt, orbit);
   scene.add(new THREE.AmbientLight(0xffffff, 0.08));
@@ -112,8 +151,11 @@ export function createMoon(
       vx *= 0.94;
       vy *= 0.94;
     }
-    if (!reduced) angle += 0.006;
+    if (!reduced) angle += 0.0045;
     sat.position.set(Math.cos(angle) * 2.15, Math.sin(angle) * 2.15, 0);
+    // El satélite avanza de frente por la órbita y gira sobre sí mismo despacio.
+    sat.rotation.set(0, 0, angle + Math.PI / 2);
+    if (model) model.rotation.y += reduced ? 0 : 0.004;
     renderer.render(scene, camera);
   };
 
@@ -123,6 +165,7 @@ export function createMoon(
 
   return {
     dispose() {
+      disposed = true;
       io.disconnect();
       ro.disconnect();
       renderer.setAnimationLoop(null);
@@ -135,7 +178,15 @@ export function createMoon(
       moon.geometry.dispose();
       (moon.material as THREE.Material).dispose();
       ring.geometry.dispose();
-      sat.geometry.dispose();
+      ringMat.dispose();
+      placeholder.geometry.dispose();
+      model?.traverse((o) => {
+        const m = o as THREE.Mesh;
+        if (m.isMesh) {
+          m.geometry.dispose();
+          (Array.isArray(m.material) ? m.material : [m.material]).forEach((mat) => mat.dispose());
+        }
+      });
       renderer.dispose();
     },
   };

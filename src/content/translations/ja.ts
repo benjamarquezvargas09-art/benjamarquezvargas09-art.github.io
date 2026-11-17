@@ -19,6 +19,8 @@ const ja: Dict = {
     language: "言語",
     home: "ホーム",
     sections: "セクション",
+    soundOn: "音楽をオン",
+    soundOff: "音楽をミュート",
   },
   intro: { loading: "読み込み中" },
   hero: {

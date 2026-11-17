@@ -3,6 +3,7 @@ import { profile } from "../../content/profile";
 import { useI18n } from "../../lib/i18n";
 import { Icon } from "./Icon";
 import { LangSwitcher } from "./LangSwitcher";
+import { SoundToggle } from "./SoundToggle";
 
 /**
  * ✏️  Secciones del menú. El `href` tiene que coincidir con el `id`
@@ -48,13 +49,15 @@ export function Nav({ onNavigate }: { onNavigate: (hash: string) => void }) {
     history.replaceState(null, "", href);
   };
 
-  const [first, ...rest] = profile.fullName.split(" ");
   return (
     <header className="nav" data-hidden={(hidden && !open) || undefined}>
       <div className="nav__progress" aria-hidden="true" />
       <a className="nav__brand" href="#top" onClick={(e) => go(e, "#top")} aria-label={`${profile.fullName} — ${t.nav.home}`}>
-        <span>{[first, rest[0]].join(" ")}</span>
-        <span>{rest.slice(1).join(" ")}</span>
+        <span className="nav__brand-name">
+          {profile.displayName}
+          <span className="nav__brand-dot">.</span>
+        </span>
+        <span className="nav__brand-full">{profile.fullName}</span>
       </a>
 
       <nav className="nav__links" aria-label={t.nav.menu}>
@@ -72,6 +75,7 @@ export function Nav({ onNavigate }: { onNavigate: (hash: string) => void }) {
       </nav>
 
       <div className="nav__tools">
+        <SoundToggle />
         <LangSwitcher />
         <button
           type="button"
